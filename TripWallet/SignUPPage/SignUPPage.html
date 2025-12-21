@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">    <title>הרשמה - TripWallet</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./SignUPPage.css">
+    <script src="./SignUPPage.js"></script>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div id="logo">
+            <img id="logoPic" src="../Images/UpdLogo.png" alt="לוגו האתר" style="width: 100px;"/>
+            <h1>ברוכים הבאים</h1>       
+        </div>
+    </header>
+ 
+    <h2>Track your travel expenses, effortlessly</h2>
+
+    <!-- Signup Form -->
+    <form id="signupForm" action="../HomePage/HomePage.html" method="POST" onsubmit="return validateForm()">
+
+        <label for="firstName">שם פרטי:</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <br><br>
+
+        <label for="lastName">שם משפחה:</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <br><br>
+
+        <label for="password">סיסמה:</label>
+        <input type="password" id="password" name="password" required>
+        <br><br>
+
+        <label for="confirmPassword">אישור סיסמה:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <br><br>
+
+        <label for="gender">מגדר:</label>
+        <select id="gender" name="gender">
+            <option value="">בחר מגדר</option>
+            <option value="male">זכר</option>
+            <option value="female">נקבה</option>
+            <option value="other">אחר</option>
+        </select>
+        <br><br>
+
+        <label for="email">אימייל:</label>
+        <input type="email" id="email" name="email" placeholder="XXX@YYY.ZZZ" required>
+        <br><br>
+
+        <label for="phone">מספר טלפון:</label>
+        <input type="tel" id="phone" name="phone" required>
+        <br><br>
+
+        <!-- Submit -->
+        <button type="submit">הירשם</button>
+        <button type="reset">איפוס טופס</button>
+    </form>
+
+    <!-- Footer -->
+    <footer class="policy-container">
+        <p>תנאי שימוש | מדיניות פרטיות</p>
+        <span class="tooltip-text">שלום ! מדיניות הפרטיות שלנו היא שאנחנו פרטיים. בנוסף תנאי השימוש שלנו ידידותיים למשתמש.</span>
+    </footer>
+
+</body>
+</html>

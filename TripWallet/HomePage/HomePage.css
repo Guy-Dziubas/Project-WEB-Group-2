@@ -1,0 +1,30 @@
+#addTrip {
+    position: absolute;           /* מוציא אותו מהזרימה הרגילה */
+    left: 20px;                   /* מצמיד אותו לצד שמאל של המסך */
+    top: 50%;                     /* ממקם באמצע הגובה */
+    transform: translateY(-50%);  /* תיקון דיוק אנכי */
+    z-index: 10;                  /* מוודא שהוא מעל אלמנטים אחרים */
+}
+
+.trip-button {
+    display: block;            /* גורם לכפתור לתפוס את כל הרוחב או שורה משלו */
+    width: 70%;               /* יתפוס 70% מרוחב הדף תמיד */
+    padding: 15px;             /* מרווח פנימי כדי שהכפתור יהיה "שמן" ונוח ללחיצה */
+    margin-bottom: 10px;       /* רווח בין כפתור לכפתור */
+    justify-self: center;
+
+    text-align: center;        /* ממקם את הטקסט באמצע הכפתור */
+    text-decoration: none;     /* מוריד את הקו התחתון שיש בדרך כלל לקישורים */
+    
+    background-color: var(--color-tea-green); /* צבע רקע אפור בהיר */
+    color: black;              /* צבע הטקסט */
+    border: 1px solid black;    /* מסגרת עדינה */
+    border-radius: 8px;        /* מעגל מעט את הפינות */
+    font-size: 18px;           /* גודל הטקסט */
+    cursor: pointer;           /* משנה את הסמן ליד כשעוברים עליו */
+}
+
+/* עיצוב למצב שעוברים עם העכבר על הכפתור */
+.trip-button:hover {
+    background-color: #e0e0e0;
+}

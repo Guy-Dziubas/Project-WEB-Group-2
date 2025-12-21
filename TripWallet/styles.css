@@ -1,0 +1,108 @@
+:root {
+  --color-vanilla-custard: #D4E09B;
+  --color-ivory: #FAF9EE;
+  --color-tea-green: #CBDFBD;
+  --color-reddish-brown: #A44A3F;
+}
+
+body {
+    background-color: var(--color-ivory);
+    text-align: center;
+    font-family: Fredoka, Arial;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    position: relative;
+    display: flex;              /* הופך את ההדר לשורה גמישה */
+    justify-content: center;    /* ממרכז את כל התוכן (לוגו + כפתור) לאמצע המסך */
+    align-items: center;        /* מיישר אותם אנכית (שלא יהיה אחד גבוה ואחד נמוך) */
+    margin-bottom: 30px;        /* רווח מתחת להדר */
+    padding-top: 10px;
+    height: 80px;
+}
+
+#logo {
+    display: flex; 
+    align-items: center; /* ריכוז אנכי */
+    justify-content: center;
+    gap: 15px;
+    flex-direction: row-reverse;
+}
+
+#logo h1 {
+    font-size: 2.5em; 
+    margin: 0; /* מבטל שוליים פנימיים שיש ל-h1 כברירת מחדל */
+}
+
+div button {
+    clear: none;
+    float: none;
+    margin-left: 35px;
+} 
+
+form {
+    margin:0 auto;
+    font-size:large;
+    background-color: var(--color-tea-green); /* רקע טופס בהיר ונקי */
+    padding: 40px;
+    border-radius: 16px; /* פינות עגולות מודרניות */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* צללית רכה לעומק */
+    width: 100%;
+    max-width: 480px;
+    box-sizing: border-box;
+}
+
+input, select, textarea, button {
+    font-family: Fredoka, Arial;
+    background-color: var(--color-ivory);
+    border: 1px solid #000000;     /* מסגרת עדינה */
+    padding: 10px;              /* רווח פנימי יפה */
+    border-radius: 12px;         /* פינות עגולות */
+    font-size: 12px;            /* טקסט נעים */
+    outline: none;              /* בלי קו כחול בלחיצה */
+    transition: 0.2s ease;      /* אנימציה עדינה */
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-reddish-brown);      /* צבע מסגרת בלחיצה */
+    box-shadow: 0 0 6px rgba(122, 64, 6, 0.3); /* זוהר עדין */
+}
+
+/*אנימצית לוגו*/
+@keyframes float {
+  0% {
+    /* מיקום התחלתי: לא זז אנכית */
+    transform: translateY(0px);
+  }
+  50% {
+    /* בשיא האנימציה: זז מעט למעלה */
+    transform: translateY(-8px); /* כמה פיקסלים לזוז למעלה */
+  }
+  100% {
+    /* סיום האנימציה: חוזר למיקום התחלתי */
+    transform: translateY(0px);
+  }
+}
+
+#logoPic {  
+  /* החלת האנימציה: */
+  animation-name: float;         /* שם האנימציה שהגדרנו */
+  animation-duration: 3s;        /* משך מחזור אנימציה אחד (3 שניות) */
+  animation-iteration-count: infinite; /* חוזר על עצמו ללא הפסקה */
+  animation-timing-function: ease-in-out; /* הופך את התנועה לחלקה יותר */
+}
+
+.form-actions{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.form-actions button{
+  margin: 0 10px;
+  padding: 10px 15px;
+}

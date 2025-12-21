@@ -1,0 +1,12 @@
+/* #return {
+    display: flex;
+    align-items: center;
+} */
+
+#return {
+    position: absolute;           /* מוציא אותו מהזרימה הרגילה */
+    left: 20px;                   /* מצמיד אותו לצד שמאל של המסך */
+    top: 50%;                     /* ממקם באמצע הגובה */
+    transform: translateY(-50%);  /* תיקון דיוק אנכי */
+    z-index: 10;                  /* מוודא שהוא מעל אלמנטים אחרים */
+}
