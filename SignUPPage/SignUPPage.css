@@ -1,10 +1,10 @@
-.policy-container {
-  position: relative; /* מאפשר לילדים שלו להתמקם ביחס אליו */
-  display: inline-block; /* כדי שהמסגרת תהיה רק סביב הטקסט ולא לרוחב כל הדף */
-  cursor: pointer; /* מראה יד קטנה כדי שיבינו שזה לחיץ/אינטראקטיבי */
+.policy-container {  /*מדיניות הפרטיות */
+  position: relative; 
+  display: inline-block; 
+  cursor: pointer; 
 }
 
-/* עיצוב הבועית עצמה (בהתחלה היא מוסתרת) */
+/* עיצוב הבועית של מדיניות הפרטיות (בהתחלה היא מוסתרת) */
 .policy-container .tooltip-text {
   visibility: hidden; /* מוסתר כברירת מחדל */
   width: 200px;
@@ -16,17 +16,17 @@
   
   /* מיקום הבועית */
   position: absolute;
-  z-index: 1; /* מוודא שהבועית תהיה מעל אלמנטים אחרים */
-  bottom: 125%; /* ממקם את הבועית מעל הטקסט */
+  z-index: 1; 
+  bottom: 125%; 
   left: 50%; 
-  transform: translateX(-50%); /* ממרכז את הבועית בדיוק לאמצע */
+  transform: translateX(-50%); 
 }
 
 /* יצירת "חץ" קטן למטה */
 .policy-container .tooltip-text::after {
   content: "";
   position: absolute;
-  top: 100%; /* בתחתית הבועית */
+  top: 100%; 
   left: 50%;
   margin-left: -5px;
   border-width: 5px;

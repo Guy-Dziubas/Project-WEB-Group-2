@@ -1,3 +1,4 @@
+/* מערך טיולים והוצאות */
 const tripsDB = {
     1: {
         name: "פריז",
@@ -82,6 +83,7 @@ const categoryIcons = {
     other: 'bi-receipt'
 };
 
+/* חישוב תקציב יומי */
 function parseDate(dateStr) { 
     const parts = dateStr.replace(/\./g, '/').split('/');
     return new Date(parts[2], parts[1] - 1, parts[0]);
@@ -93,6 +95,7 @@ let currentTrip = null;
 let totalSpent = 0; 
 let expenseChartInstance = null; // משתנה שיחזיק את הגרף
 
+/* פונקציה שמציגה את הוצאות הטיול בתרשים עוגה */
 function renderChart() {
     const ctx = document.getElementById('expensesChart').getContext('2d');
     const chartContainer = document.getElementById('chartContainer');
@@ -151,7 +154,7 @@ function renderChart() {
                     '#BB9457'
                 ],
                 borderWidth: 2,
-                borderColor: '#FAF9EE' // צבע רקע האתר כדי שייראה יפה
+                borderColor: '#FAF9EE' // צבע רקע האתר 
             }]
         },
         options: {
@@ -162,7 +165,7 @@ function renderChart() {
                     position: 'bottom', // המקרא יהיה למטה
                     labels: {
                         font: {
-                            family: 'Fredoka' // הפונט של האתר
+                            family: 'Fredoka'
                         }
                     }
                 }
@@ -171,7 +174,7 @@ function renderChart() {
     });
 }
 
-// המטרה: לקרוא לפונקציה הזו כל פעם שמשהו משתנה, והיא תסדר את הכל מחדש
+// נקרא לפונקציה הזו כל פעם שמשהו משתנה, ונסדר את ההוצאות מחדש
 function renderExpensesList() {
     const listContainer = document.getElementById('expenseList');
     listContainer.innerHTML = ""; // ניקוי הרשימה הקיימת
@@ -233,14 +236,14 @@ function renderExpensesList() {
     renderChart(); // עדכון הגרף
 }
 
-// --- לוגיקה לטעינת העמוד ---
+// לוגיקה לטעינת העמוד 
 document.addEventListener('DOMContentLoaded', () => {
     // קריאת ה-ID משורת הכתובת
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     currentTripId = id;
     
-    currentTrip = tripsDB[id]; // משתנה הטיול הראשי!
+    currentTrip = tripsDB[id]; // משתנה הטיול הראשי
 
     if (currentTrip) {
         // מילוי הנתונים בדף
@@ -288,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // לוגיקה להצגה/הסתרה של הטופס
-
     showButton.addEventListener('click', () => {
         hideContainer.style.display = 'block';
         showButton.style.display = 'none';
@@ -301,22 +303,20 @@ document.addEventListener('DOMContentLoaded', () => {
         commissionContainer.style.display = 'none';
     });
 
-
     // לוגיקה לשמירת הנתונים והצגתם
-
     expenseForm.addEventListener('submit',async (event) => {
         event.preventDefault(); 
 
         // קבלת נתוני הטופס
         const description = document.getElementById('description').value;
         const rawAmount = parseFloat(document.getElementById('amount').value);
-        const dateInput = document.getElementById('date').value; // תאריך גולמי
+        const dateInput = document.getElementById('date').value; 
         const categoryVal = document.getElementById('category').value;
         const paymentMethod = document.getElementById('paymentMethod').value;
         const commissionPercent = parseFloat(document.getElementById('commission').value) || 0;
         const currency = document.getElementById('currency').value;
 
-        if (!currentTrip || isNaN(rawAmount)) return; // בדיקה בסיסית
+        if (!currentTrip || isNaN(rawAmount)) return; // בדיקה שקיים טיול וסכום
 
         // משתנה שיחזיק את הסכום בשקלים
         let amountInILS = rawAmount; 
@@ -357,8 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalSpent + finalAmount > currentTrip.budget) {
             alert(`שים לב! ⚠️\nההוצאה הזו תגרום לחריגה מתקציב הטיול.\n(תקציב: ₪${currentTrip.budget.toLocaleString()}, סה"כ אחרי הוספה: ₪${(totalSpent + finalAmount).toLocaleString()})`);
         }
-
-        // --- שמירה ועדכון סכום ---
+        //  שמירה ועדכון סכום 
         
         // המרת התאריך לפורמט קריא לשמירה/תצוגה (DD/MM/YYYY)
         const displayDate = new Date(dateInput).toLocaleDateString('he-IL');

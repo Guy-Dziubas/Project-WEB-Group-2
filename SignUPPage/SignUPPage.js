@@ -1,4 +1,4 @@
-// בדיקת סיסמה בלבד
+// בדיקת סיסמה 
 function checkPassword() {
     var password = document.getElementById("password").value;
     var confirmPassword = document.getElementById("confirmPassword").value;
@@ -8,15 +8,15 @@ function checkPassword() {
         alert("שגיאה: הסיסמאות אינן תואמות!");
         confirmField.style.border = "2px solid red";
         confirmField.focus(); // שם את הסמן בשדה הבעייתי
-        return false; // החזרת "שקר" - הבדיקה נכשלה
+        return false; 
     }
 
-    // אם תקין - מנקים עיצוב ומחזירים "אמת"
+    // אם קלט תקין, מנקים מסגרת אדומה
     confirmField.style.border = "";
     return true;
 }
 
-// בדיקת טלפון בלבד
+// בדיקת טלפון
 function checkPhone() {
     var phone = document.getElementById("phone").value;
     var phoneField = document.getElementById("phone");
@@ -26,7 +26,7 @@ function checkPhone() {
         alert("שגיאה: מספר טלפון חייב להכיל 10 ספרות בדיוק ולהתחיל בספרה 0.");
         phoneField.style.border = "2px solid red";
         phoneField.focus();
-        return false; // הבדיקה נכשלה
+        return false;
     }
 
     // אם תקין
@@ -35,12 +35,12 @@ function checkPhone() {
 }
 
 function validateForm() {
-    // קודם כל בודקים סיסמה. אם היא נכשלה - עוצרים הכל!
+    // קודם כל בודקים סיסמה. אם היא נכשלה - עוצרים הכל
     if (checkPassword() === false) {
         return false;
     }
 
-    // אחר כך בודקים טלפון. אם הוא נכשל - עוצרים הכל!
+    // אחר כך בודקים טלפון. אם הוא נכשל - עוצרים הכל
     if (checkPhone() === false) {
         return false;
     }
