@@ -1,0 +1,250 @@
+.main-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+#return {
+    position: absolute;           /* מוציא אותו מהזרימה הרגילה */
+    left: 20px;                   /* מצמיד אותו לצד שמאל של המסך */
+    top: 50%;                     /* ממקם באמצע הגובה */
+    transform: translateY(-50%);  /* תיקון דיוק אנכי */
+    z-index: 10;                  /* מוודא שהוא מעל אלמנטים אחרים */
+}
+
+#expenseList {
+    display: grid; /* שינוי מ-Flex ל-Grid */
+    /* הנוסחה הזו אומרת: תמלא כמה שיותר עמודות, כל עוד כל כרטיס הוא לפחות 160px */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+#showFormButton {
+    background-color: var(--color-reddish-brown);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-size: 1.2em;
+    box-shadow: 0 4px 10px rgba(164, 74, 63, 0.3);
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 30px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#showFormButton:hover {
+    background-color: #8a3b32;
+    transform: scale(1.05);
+}
+
+#expenseFormContainer {
+    background: #fff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-tea-green);
+    margin-bottom: 30px;
+}
+
+/* תיקון כיוון התאריכים משמאל לימין */
+.trip-dates {
+    direction: ltr;        /* הופך את הכיוון: התחלה משמאל, סיום מימין */
+    display: block;        /* תופס שורה משלו */
+    margin-bottom: 10px;   /* רווח קטן מתחת לתאריך */
+    font-size: 1.2rem;     /* גודל פונט ברור */
+    color: #333;
+}
+
+/* --- Layout חדש: חלוקה לעמודות --- */
+.dashboard-wrapper {
+    display: flex;
+    gap: 30px; /* רווח בין צד ימין לצד שמאל */
+    align-items: flex-start; /* חשוב כדי שה-Sticky יעבוד */
+}
+
+/* צד ימין - סטטיסטיקות */
+.dashboard-sidebar {
+    width: 350px; /* רוחב קבוע לסרגל הצד */
+    flex-shrink: 0; /* שלא יתכווץ */
+    position: sticky; /* נדבק למעלה */
+    top: 20px; /* המרחק מלמעלה כשהוא נדבק */
+}
+
+/* צד שמאל - תוכן */
+.dashboard-content {
+    flex-grow: 1; /* תופס את כל שאר המקום */
+    min-width: 0; /* מונע גלישה בתוך Flex */
+}
+
+/* --- הגדרות רספונסיביות (שינוי מספר הכרטיסיות בשורה) --- */
+
+/* בטאבלט - 3 בשורה */
+/* @media (min-width: 600px) {
+    #expenseList {
+        grid-template-columns: repeat(3, 1fr);
+    }
+} */
+
+/* במחשב רגיל - 4 בשורה */
+/* @media (min-width: 900px) {
+    #expenseList {
+        grid-template-columns: repeat(4, 1fr);
+    }
+} */
+
+/* במסך רחב - 5 בשורה */
+/* @media (min-width: 1200px) {
+    #expenseList {
+        grid-template-columns: repeat(5, 1fr);
+    }
+} */
+
+/* --- התאמה למובייל (מתחת ל-900px) --- */
+@media (max-width: 900px) {
+    .dashboard-wrapper {
+        flex-direction: column; /* חוזרים לטור אחד */
+    }
+    .dashboard-sidebar {
+        width: 100%; /* רוחב מלא במובייל */
+        position: static; /* מבטל את ההדבקה במובייל */
+        margin-bottom: 30px;
+    }
+}
+
+/* --- עיצוב הכרטיסייה עצמה --- */
+.expense-row {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    height: 180px; /* קצת יותר גובה לרווח */
+    background-color: white;
+    border-radius: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    border: 1px solid #f0f0f0;
+    border-right: 5px solid var(--color-vanilla-custard);
+}
+
+/* אפקט ריחוף חמוד */
+.expense-row:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+/* סידור התוכן הפנימי (אייקון, שם, תאריך) */
+.expense-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+/* עיצוב האייקון */
+.category-icon {
+    font-size: 2rem ;
+    margin: 0 0 8px 0 ;
+    color: var(--color-reddish-brown);
+    background-color: var(--color-ivory);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.expense-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.expense-date {
+    font-size: 0.75em;
+    color: #999;
+    margin-bottom: 5px;
+}
+
+.expense-amount {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--color-reddish-brown);
+    margin-top: auto;
+}
+
+.trip-summary-card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* צללית עדינה */
+    margin-bottom: 30px;
+    border: 1px solid var(--color-tea-green);
+}
+
+.trip-dates {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.budget-stats {
+    display: flex;
+    /* justify-content: space-around; */
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: space-between;
+    align-items: center;
+    /* padding: 10px;
+    width: 30%; */
+    width: 100%;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 10px;
+}
+
+.stat-label {
+    font-family: 'Amatic SC', cursive;
+    font-size: 1.5em;
+    color: var(--color-reddish-brown);
+    font-weight: bold;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-value {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+#chartContainer {
+    position: relative;
+    height: 300px;        /* גובה הגרף */
+    width: 90%;
+    max-width: 500px;     /* רוחב מקסימלי */
+    margin: 20px auto;    /* מרכוז */
+}

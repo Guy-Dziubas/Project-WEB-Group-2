@@ -1,0 +1,40 @@
+.policy-container {
+  position: relative; /* מאפשר לילדים שלו להתמקם ביחס אליו */
+  display: inline-block; /* כדי שהמסגרת תהיה רק סביב הטקסט ולא לרוחב כל הדף */
+  cursor: pointer; /* מראה יד קטנה כדי שיבינו שזה לחיץ/אינטראקטיבי */
+}
+
+/* עיצוב הבועית עצמה (בהתחלה היא מוסתרת) */
+.policy-container .tooltip-text {
+  visibility: hidden; /* מוסתר כברירת מחדל */
+  width: 200px;
+  background-color: var(--color-ivory);
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  
+  /* מיקום הבועית */
+  position: absolute;
+  z-index: 1; /* מוודא שהבועית תהיה מעל אלמנטים אחרים */
+  bottom: 125%; /* ממקם את הבועית מעל הטקסט */
+  left: 50%; 
+  transform: translateX(-50%); /* ממרכז את הבועית בדיוק לאמצע */
+}
+
+/* יצירת "חץ" קטן למטה */
+.policy-container .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* בתחתית הבועית */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-ivory) transparent transparent transparent;
+}
+
+.policy-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
