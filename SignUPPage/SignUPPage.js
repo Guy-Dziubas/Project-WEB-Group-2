@@ -40,14 +40,15 @@ form.addEventListener('submit', function (event) {
   event.preventDefault();
   console.log('submit handler עובד'); // בדיקה
 
-  // בדיקת טופס – בדיוק כמו קודם, רק מכאן
-  if (checkPassword() === false) {
-    return;               // סיסמאות לא תואמות → להישאר בעמוד
-  }
+  const passOk = checkPassword();
+  console.log('checkPassword =', passOk);
 
-  if (checkPhone() === false) {
-    return;               // טלפון לא תקין → להישאר בעמוד
-  }
+  const phoneOk = checkPhone();
+  console.log('checkPhone =', phoneOk);
+
+  if (!passOk || !phoneOk) {
+    // אחת הבדיקות נכשלה – להישאר בעמוד
+    return;  
 
   // אם שתי הבדיקות עברו בהצלחה – מעבר ל־LoginPage
   window.location.href = "../HomePage/HomePage.html";
