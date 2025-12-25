@@ -49,7 +49,7 @@ form.addEventListener('submit', function (event) {
   if (!passOk || !phoneOk) {
     // אחת הבדיקות נכשלה – להישאר בעמוד
     return;  
-
+  }
   // אם שתי הבדיקות עברו בהצלחה – מעבר ל־LoginPage
   window.location.href = "../HomePage/HomePage.html";
 });
