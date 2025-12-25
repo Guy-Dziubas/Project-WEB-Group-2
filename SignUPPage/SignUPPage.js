@@ -50,6 +50,6 @@ form.addEventListener('submit', function (event) {
   }
 
   // אם שתי הבדיקות עברו בהצלחה – מעבר ל־LoginPage
-  window.location.href = "../LoginPage/LoginPage.html";
+  window.location.href = "../HomePage/HomePage.html";
 });
 
