@@ -38,7 +38,7 @@ const form = document.getElementById('signupForm');
 
 form.addEventListener('submit', function (event) {
   event.preventDefault();
-  console.log('submit handler עובד'); // בדיקה
+  console.log('submit handler עובד');
 
   const passOk = checkPassword();
   console.log('checkPassword =', passOk);
@@ -47,10 +47,10 @@ form.addEventListener('submit', function (event) {
   console.log('checkPhone =', phoneOk);
 
   if (!passOk || !phoneOk) {
-    // אחת הבדיקות נכשלה – להישאר בעמוד
-    return;  
+    return; // אחת הבדיקות נכשלה – להישאר בעמוד
   }
-  // אם שתי הבדיקות עברו בהצלחה – מעבר ל־LoginPage
+
+  console.log('הכל תקין – מעבר לדף הבית');
   window.location.href = "../HomePage/HomePage.html";
 });
 
