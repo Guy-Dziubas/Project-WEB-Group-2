@@ -34,6 +34,14 @@ function checkPhone() {
     return true;
 }
 
+const form = document.getElementById('signupForm');
+
+form.addEventListener('submit', function (event) {
+  event.preventDefault();
+  console.log('submit handler עובד'); // בדיקה
+  window.location.href = "../LoginPage/LoginPage.html";
+});
+
 function validateForm() {
     // קודם כל בודקים סיסמה. אם היא נכשלה - עוצרים הכל
     if (checkPassword() === false) {
