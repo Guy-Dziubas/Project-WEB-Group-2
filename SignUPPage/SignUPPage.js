@@ -39,20 +39,17 @@ const form = document.getElementById('signupForm');
 form.addEventListener('submit', function (event) {
   event.preventDefault();
   console.log('submit handler עובד'); // בדיקה
+
+  // בדיקת טופס – בדיוק כמו קודם, רק מכאן
+  if (checkPassword() === false) {
+    return;               // סיסמאות לא תואמות → להישאר בעמוד
+  }
+
+  if (checkPhone() === false) {
+    return;               // טלפון לא תקין → להישאר בעמוד
+  }
+
+  // אם שתי הבדיקות עברו בהצלחה – מעבר ל־LoginPage
   window.location.href = "../LoginPage/LoginPage.html";
 });
 
-function validateForm() {
-    // קודם כל בודקים סיסמה. אם היא נכשלה - עוצרים הכל
-    if (checkPassword() === false) {
-        return false;
-    }
-
-    // אחר כך בודקים טלפון. אם הוא נכשל - עוצרים הכל
-    if (checkPhone() === false) {
-        return false;
-    }
-
-    // אם שתי הבדיקות עברו בהצלחה, מאשרים את שליחת הטופס
-    return true;
-}
