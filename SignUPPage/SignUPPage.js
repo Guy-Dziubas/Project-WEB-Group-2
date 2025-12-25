@@ -34,23 +34,25 @@ function checkPhone() {
     return true;
 }
 
+console.log('SignUPPage.js loaded');
+
 const form = document.getElementById('signupForm');
+console.log('form =', form);
 
 form.addEventListener('submit', function (event) {
-  event.preventDefault();
-  console.log('submit handler עובד');
+    event.preventDefault();
+    console.log('submit handler עובד');
 
-  const passOk = checkPassword();
-  console.log('checkPassword =', passOk);
+    const passOk = checkPassword();
+    console.log('checkPassword =', passOk);
 
-  const phoneOk = checkPhone();
-  console.log('checkPhone =', phoneOk);
+    const phoneOk = checkPhone();
+    console.log('checkPhone =', phoneOk);
 
-  if (!passOk || !phoneOk) {
-    return; // אחת הבדיקות נכשלה – להישאר בעמוד
-  }
+    if (!passOk || !phoneOk) {
+        return; // אחת הבדיקות נכשלה – לא לעבור דף
+    }
 
-  console.log('הכל תקין – מעבר לדף הבית');
-  window.location.href = "../HomePage/HomePage.html";
+    console.log('הכל תקין – מעבר לדף הבית');
+    window.location.href = "../HomePage/HomePage.html";
 });
-
