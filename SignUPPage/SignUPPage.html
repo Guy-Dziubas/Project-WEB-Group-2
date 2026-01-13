@@ -19,14 +19,17 @@
     <h2>Track your travel expenses, effortlessly</h2>
 
     <!-- טופס הרישום -->
-    <form id="signupForm">
-
+    <form id="signupForm" action="/signup" method="post">
         <label for="firstName">שם פרטי:</label>
         <input type="text" id="firstName" name="firstName" required>
         <br><br>
 
         <label for="lastName">שם משפחה:</label>
         <input type="text" id="lastName" name="lastName" required>
+        <br><br>
+
+        <label for="userName">שם משתמש:</label>
+        <input type="text" id="userName" name="userName" required>
         <br><br>
 
         <label for="password">סיסמה:</label>

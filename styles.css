@@ -122,3 +122,11 @@ textarea:focus {
   padding: 10px 15px;
 }
 
+label {
+  display: inline-block;
+  width: 120px;
+}
+
+input, select {
+  width: 120px;
+}

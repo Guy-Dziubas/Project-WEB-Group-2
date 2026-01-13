@@ -4,17 +4,83 @@
     padding: 0 20px;
 }
 
-#return {           /* כפתור חזרה לדף הטיולים שלי*/
-    position: absolute;          
-    left: 20px;                  
-    top: 50%;                     
-    transform: translateY(-50%);  
-    z-index: 10;                
+#return {
+    /* כפתור חזרה לדף הטיולים שלי*/
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+/* --- מודל מחיקה --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* מציג את חלונית הביטול */
+.modal-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s;
+}
+
+/*קפיצת החלונית*/
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    text-align: center;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* --- כפתור מחיקה --- */
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+    z-index: 10;
+    padding: 5px;
+    pointer-events: auto;
 }
 
 #expenseList {
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 20px;
     width: 100%;
     margin-top: 20px;
@@ -46,58 +112,57 @@
     background: #fff;
     padding: 25px;
     border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--color-tea-green);
     margin-bottom: 30px;
 }
 
-/* תיקון כיוון התאריכים משמאל לימין */
-.trip-dates {
-    direction: ltr;      
-    display: block;      
-    margin-bottom: 10px;  
-    font-size: 1.2rem;     
-    color: #333;
-}
-
 .dashboard-wrapper {
     display: flex;
-    gap: 30px; 
-    align-items: flex-start; 
+    gap: 30px;
+    align-items: flex-start;
 }
 
 /* צד ימין - סטטיסטיקות */
 .dashboard-sidebar {
-    width: 350px; 
+    width: 350px;
     flex-shrink: 0;
-    position: sticky; 
-    top: 20px; 
+    position: sticky;
+    top: 20px;
 }
 
 /* צד שמאל - תוכן */
 .dashboard-content {
     flex-grow: 1;
-    min-width: 0; 
+    min-width: 0;
+    position: relative;
+    z-index: 5;
 }
 
 /* --- התאמה למובייל (מתחת ל-900px) --- */
 @media (max-width: 900px) {
     .dashboard-wrapper {
-        flex-direction: column; /* חוזרים לטור אחד */
+        flex-direction: column;
+        /* חוזרים לטור אחד */
     }
+
     .dashboard-sidebar {
-        width: 100%; /* רוחב מלא במובייל */
-        position: static; /* מבטל את ההדבקה במובייל */
+        width: 100%;
+        /* רוחב מלא במובייל */
+        position: static;
+        /* מבטל את ההדבקה במובייל */
         margin-bottom: 30px;
     }
 }
 
 /* --- עיצוב הכרטיסייה עצמה --- */
 .expense-row {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 350px;
     margin: 0 auto;
-    height: 180px; 
+    height: 180px;
     background-color: white;
     border-radius: 20px;
     padding: 15px;
@@ -105,7 +170,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s;
     border: 1px solid #f0f0f0;
     border-right: 5px solid var(--color-vanilla-custard);
@@ -113,7 +178,8 @@
 
 .expense-row:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
 }
 
 /* סידור התוכן הפנימי */
@@ -127,8 +193,8 @@
 
 /* עיצוב האייקון */
 .category-icon {
-    font-size: 2rem ;
-    margin: 0 0 8px 0 ;
+    font-size: 2rem;
+    margin: 0 0 8px 0;
     color: var(--color-reddish-brown);
     background-color: var(--color-ivory);
     width: 50px;
@@ -157,15 +223,18 @@
     background-color: white;
     border-radius: 20px;
     padding: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* צללית עדינה */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     margin-bottom: 30px;
     border: 1px solid var(--color-tea-green);
 }
 
+/* תיקון כיוון התאריכים משמאל לימין */
 .trip-dates {
+    direction: ltr;
     display: block;
-    font-size: 0.9em;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #333;
     font-weight: bold;
 }
 
@@ -185,12 +254,13 @@
 }
 
 .stat-label {
-    font-family: 'Amatic SC', cursive;
+    font-family: 'Amatic SC', 'cursive';
     font-size: 1.5em;
     color: var(--color-reddish-brown);
     font-weight: bold;
 }
 
+/* הסרת קו התחתון אחרי הוצאות */
 .stat-item:last-child {
     border-bottom: none;
 }
@@ -204,8 +274,8 @@
 /* עיצוב תרשים עוגה */
 #chartContainer {
     position: relative;
-    height: 300px;       
+    height: 300px;
     width: 90%;
-    max-width: 500px;     
-    margin: 20px auto;   
+    max-width: 500px;
+    margin: 20px auto;
 }

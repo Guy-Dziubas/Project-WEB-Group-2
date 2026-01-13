@@ -1,78 +1,3 @@
-/* מערך טיולים והוצאות */
-const tripsDB = {
-    1: {
-        name: "פריז",
-        budget: 20000,
-        start: "01/08/2025",
-        end: "16/08/2025",
-        expenses: [
-            {
-                item: "טיסה הלוך ושוב",
-                cost: 4500,
-                date: "01/08/2025",
-                category: "flights",
-                paymentMethod: "credit",
-                commissionPercent: 0
-            },
-            {
-                item: "מלון (5 לילות ראשונים)",
-                cost: 6200,
-                date: "01/08/2025",
-                category: "accommodation",
-                paymentMethod: "credit",
-                commissionPercent: 0
-            },
-            {
-                item: "ארוחת ערב חגיגית",
-                cost: 450,
-                date: "02/08/2025",
-                category: "food",
-                paymentMethod: "cash",
-                commissionPercent: 0
-            },
-            {
-                item: "כרטיס נסיעה במטרו",
-                cost: 120,
-                date: "03/08/2025",
-                category: "transport",
-                paymentMethod: "cash",
-                commissionPercent: 0
-            },
-            {
-                item: "קניית מעיל",
-                cost: 850,
-                date: "04/08/2025",
-                category: "shopping",
-                paymentMethod: "credit",
-                commissionPercent: 1.5
-            }
-        ]
-    },
-    2: {
-        name: "רומא",
-        budget: 5000,
-        start: "10/07/2025",
-        end: "17/07/2025",
-        expenses: [
-            {
-                item: "פיצה",
-                cost: 60,
-                date: "10/07/2025",
-                category: "food",
-                paymentMethod: "cash",
-                commissionPercent: 0
-            }
-        ]
-    },
-    3: {
-        name: "אתונה",
-        budget: 5000,
-        start: "10/10/2024",
-        end: "17/10/2024",
-        expenses: []
-    }
-};
-
 const categoryIcons = {
     flights: 'bi-airplane',
     accommodation: 'bi-house-door',
@@ -83,17 +8,49 @@ const categoryIcons = {
     other: 'bi-receipt'
 };
 
+/* פונקציית עזר לפורמט תאריך ישראלי */
+function formatDateToIL(dateInput) {
+    if (!dateInput) return "";
+    const d = new Date(dateInput);
+    if (isNaN(d.getTime())) return dateInput; // אם לא תקין, החזר את המקור
+
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
 /* חישוב תקציב יומי */
-function parseDate(dateStr) { 
-    const parts = dateStr.replace(/\./g, '/').split('/');
-    return new Date(parts[2], parts[1] - 1, parts[0]);
+function parseDate(dateStr) {
+    // אם התאריך כבר בפורמט DD/MM/YYYY
+    if (dateStr.includes('/')) {
+        const parts = dateStr.split('/');
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) return date;
+
+    return new Date();
 }
 
 // משתנים גלובליים
-let currentTripId = null; 
-let currentTrip = null; 
-let totalSpent = 0; 
+let currentTripId = null; // מזהה (מספר) של הטיול הנוכחי
+let currentTrip = null;   // אובייקט המכיל את כל פרטי הטיול (יעד, תאריכים, תקציב ורשימת הוצאות)
+let totalSpent = 0;
 let expenseChartInstance = null; // משתנה שיחזיק את הגרף
+let expenseToDeleteIndex = null; // משתנה מחיקה
+
+// פונקציה שפותחת חלונית מחיקה
+window.openDeleteModal = function (index) {
+    console.log("openDeleteModal called for index:", index);
+    expenseToDeleteIndex = index;
+    const modal = document.getElementById('deleteModal');
+    if (modal) {
+        modal.classList.add('show');
+    } else {
+        console.error("Modal element not found!");
+    }
+};
 
 /* פונקציה שמציגה את הוצאות הטיול בתרשים עוגה */
 function renderChart() {
@@ -129,6 +86,7 @@ function renderChart() {
         other: 'אחר'
     };
 
+    // יצירת תוויות (שמות קטגוריות בעברית) וערכים (סכומים) לגרף
     const labels = Object.keys(totals).map(cat => categoryNames[cat] || cat);
     const dataValues = Object.values(totals);
 
@@ -145,16 +103,16 @@ function renderChart() {
             datasets: [{
                 data: dataValues,
                 backgroundColor: [
-                    '#D90429', 
-                    '#219EBC', 
-                    '#40916C', 
-                    '#7B2CBF', 
+                    '#D90429',
+                    '#219EBC',
+                    '#40916C',
+                    '#7B2CBF',
                     '#FF5C8A',
                     '#FF9500',
                     '#BB9457'
                 ],
                 borderWidth: 2,
-                borderColor: '#FAF9EE' // צבע רקע האתר 
+                borderColor: '#FAF9EE' // צבע רקע
             }]
         },
         options: {
@@ -183,6 +141,7 @@ function renderExpensesList() {
     if (currentTrip.expenses.length === 0) {
         listContainer.innerHTML = '<p style="text-align:center; color:gray;">אין הוצאות עדיין</p>';
         document.getElementById('spent-display').textContent = `₪0`;
+        renderChart(); // אי הצגת גרף
         return;
     }
 
@@ -192,11 +151,11 @@ function renderExpensesList() {
     });
 
     // בניית הרשימה מחדש לפי הסדר הממוין
-    currentTrip.expenses.forEach(exp => {
+    currentTrip.expenses.forEach((exp, index) => {
         totalSpent += exp.cost; // חישוב סכום מצטבר
 
         const iconClass = categoryIcons[exp.category] || 'bi-receipt';
-        
+
         // בדיקת אמצעי תשלום
         let paymentText = "";
         if (exp.paymentMethod === 'credit') paymentText = 'אשראי';
@@ -204,14 +163,15 @@ function renderExpensesList() {
 
         // בדיקת עמלה
         let commissionDisplay = "";
-        if (exp.commissionPercent && exp.commissionPercent > 0) {
-            commissionDisplay = `| עמלה: ${exp.commissionPercent}%`;
+        if (exp.commission && exp.commission > 0) {
+            commissionDisplay = `| עמלה: ${exp.commission}%`;
         }
 
         const newExpenseRow = document.createElement('div');
         newExpenseRow.classList.add('expense-row');
-        
+
         const rowHTML = `
+            <button class="delete-btn" onclick="openDeleteModal(${index})"><i class="bi bi-x-lg"></i></button>
             <div class="expense-info">
                 <div class="category-icon" style="margin-left: 10px; font-size: 1.2rem; color: #555;">
                     <i class="bi ${iconClass}"></i>
@@ -237,29 +197,40 @@ function renderExpensesList() {
 }
 
 // לוגיקה לטעינת העמוד 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+
     // קריאת ה-ID משורת הכתובת
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
+    const username = params.get('username');
+
+    const returnBtn = document.getElementById('returnBtn');
+    if (returnBtn) {
+        returnBtn.addEventListener('click', () => {
+            window.location.href = `../HomePage/HomePage.html?username=${username}`;
+        });
+    }
     currentTripId = id;
-    
-    currentTrip = tripsDB[id]; // משתנה הטיול הראשי
+
+    // בקשת נתונים מהשרת עבור הטיול הספציפי
+    const response = await fetch(`/get-trip-data?id=${id}`);
+    currentTrip = await response.json();
 
     if (currentTrip) {
         // מילוי הנתונים בדף
-        document.getElementById('destination-display').textContent = currentTrip.name;
-        document.getElementById('dates-display').textContent = `${currentTrip.start} - ${currentTrip.end}`;
+        document.getElementById('destination-display').textContent = currentTrip.destination;
+        const startDate = parseDate(currentTrip.startDate);
+        const endDate = parseDate(currentTrip.endDate);
+
+        document.getElementById('dates-display').textContent = `${formatDateToIL(currentTrip.startDate)} - ${formatDateToIL(currentTrip.endDate)}`;
         document.getElementById('budget-display').textContent = `₪${currentTrip.budget.toLocaleString()}`;
 
-        const startDate = parseDate(currentTrip.start);
-        const endDate = parseDate(currentTrip.end);
-    
         // חישוב ימים
         const diffTime = Math.abs(endDate - startDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
         if (diffDays > 0) {
-            const dailyBudget = Math.floor(currentTrip.budget / diffDays); 
+            const dailyBudget = Math.floor(currentTrip.budget / diffDays);
             document.getElementById('daily-budget-display').textContent = `₪${dailyBudget.toLocaleString()}`;
         }
         else {
@@ -276,12 +247,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const expenseForm = document.getElementById('expenseForm');
     const expenseList = document.getElementById('expenseList');
 
+    // מחיקת הוצאה
+    const deleteModal = document.getElementById('deleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDelete');
+    const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (expenseToDeleteIndex !== null) {
+
+            // מציאת ID של ההוצאה לצורך מחיקה
+            const expense = currentTrip.expenses[expenseToDeleteIndex];
+
+            if (expense && expense.id) {
+                try {
+                    const response = await fetch('/delete-expense', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ expId: expense.id })
+                    });
+
+                    if (response.ok) {
+                        // מוחק הוצאה מהתצוגה ומעדכן
+                        currentTrip.expenses.splice(expenseToDeleteIndex, 1);
+                        renderExpensesList();
+                    } else {
+                        alert("שגיאה במחיקת ההוצאה מהשרת.");
+                    }
+                } catch (error) {
+                    console.error("Error deleting expense:", error);
+                    alert("שגיאה בתקשורת עם השרת.");
+                }
+            } else {
+                currentTrip.expenses.splice(expenseToDeleteIndex, 1);
+                renderExpensesList();
+            }
+
+            // סגירת החלונית ואיפוס המשתנה (פעולה זהה לביטול, אך קורית כאן אחרי אישור המחיקה)
+            deleteModal.classList.remove('show');
+            expenseToDeleteIndex = null;
+        }
+    });
+
+    // ביטול מחיקה: סגירת החלונית ואיפוס המשתנה
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.classList.remove('show');
+        expenseToDeleteIndex = null;
+    });
+
     const paymentMethodSelect = document.getElementById('paymentMethod');
     const commissionContainer = document.getElementById('commissionContainer');
     const commissionInput = document.getElementById('commission');
 
     // מאזין לשינוי בשדה "אמצעי תשלום"
-    paymentMethodSelect.addEventListener('change', function() {
+    paymentMethodSelect.addEventListener('change', function () {
         if (this.value === 'credit') {
             commissionContainer.style.display = 'block'; // מציג את העמלה
         } else {
@@ -304,22 +324,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // לוגיקה לשמירת הנתונים והצגתם
-    expenseForm.addEventListener('submit',async (event) => {
-        event.preventDefault(); 
+    expenseForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
         // קבלת נתוני הטופס
         const description = document.getElementById('description').value;
         const rawAmount = parseFloat(document.getElementById('amount').value);
-        const dateInput = document.getElementById('date').value; 
+        const dateInput = document.getElementById('date').value;
         const categoryVal = document.getElementById('category').value;
         const paymentMethod = document.getElementById('paymentMethod').value;
-        const commissionPercent = parseFloat(document.getElementById('commission').value) || 0;
+        const commission = parseFloat(document.getElementById('commission').value) || 0;
         const currency = document.getElementById('currency').value;
 
-        if (!currentTrip || isNaN(rawAmount)) return; // בדיקה שקיים טיול וסכום
+        if (!currentTrip || isNaN(rawAmount)) {
+            console.error("Missing trip data or invalid amount", { currentTrip, rawAmount });
+            return;
+        }
+
+        console.log("Submitting expense for Trip ID:", currentTripId);
 
         // משתנה שיחזיק את הסכום בשקלים
-        let amountInILS = rawAmount; 
+        let amountInILS = rawAmount;
 
         // בדיקה האם צריך המרה
         if (currency !== 'ILS') {
@@ -330,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // אם המשתמש בחר תאריך - נשתמש בו. אם לא (או שזה היום) - נשתמש ב-latest
                 let dateForApi = 'latest';
                 const todayStr = new Date().toISOString().split('T')[0]; // התאריך של היום בפורמט YYYY-MM-DD
-                
+
                 if (dateInput && dateInput < todayStr) {
                     dateForApi = dateInput; // שימוש בתאריך היסטורי אם הוא בעבר
                 }
@@ -339,42 +364,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 amountInILS = data.rates.ILS;
-                
+
             } catch (error) {
                 console.error("Error converting currency:", error);
                 alert("שגיאה בחיבור לשרת ההמרה (או שאין שער לתאריך זה).");
                 document.querySelector('button[type="submit"]').textContent = 'הוסף הוצאה';
-                return; 
+                return;
             } finally {
                 document.querySelector('button[type="submit"]').textContent = 'הוסף הוצאה';
             }
         }
 
         //חישוב עמלה בשקלים
-        const commissionAmount = amountInILS * (commissionPercent / 100);
+        const commissionAmount = amountInILS * (commission / 100);
         const finalAmount = amountInILS + commissionAmount;
 
         if (totalSpent + finalAmount > currentTrip.budget) {
             alert(`שים לב! ⚠️\nההוצאה הזו תגרום לחריגה מתקציב הטיול.\n(תקציב: ₪${currentTrip.budget.toLocaleString()}, סה"כ אחרי הוספה: ₪${(totalSpent + finalAmount).toLocaleString()})`);
         }
-        //  שמירה ועדכון סכום 
-        
-        // המרת התאריך לפורמט קריא לשמירה/תצוגה (DD/MM/YYYY)
-        const displayDate = new Date(dateInput).toLocaleDateString('he-IL');
 
         const newExpense = {
+            tripId: currentTripId,
             item: description,
-            cost: finalAmount,
-            date: displayDate,
+            cost: finalAmount, // הסכום הסופי בשקלים
+            currency: currency, // המטבע המקורי
+            date: dateInput, // שומרים בפורמט YYYY-MM-DD עבור ה-DB
             category: categoryVal,
             paymentMethod: paymentMethod,
-            commissionPercent: commissionPercent
+            commission: commission
         };
-        currentTrip.expenses.push(newExpense);
-        renderExpensesList();
-        
+
+        try {
+            const response = await fetch('/add-expense', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newExpense)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+
+                // רק אם השמירה בשרת הצליחה, נעדכן את הממשק
+                // שימוש בפונקציית העזר לפורמט אחיד
+                newExpense.date = formatDateToIL(dateInput);
+                newExpense.id = responseData.id; // הוספת ID מהשרת
+
+                currentTrip.expenses.push(newExpense);
+                renderExpensesList();
+
+                // ניקוי הטופס והסתרתו
+                expenseForm.reset();
+                hideContainer.style.display = 'none';
+                showButton.style.display = 'block';
+                commissionContainer.style.display = 'none';
+            } else {
+                alert("שגיאה בשמירת ההוצאה בשרת.");
+            }
+        } catch (error) {
+            console.error("Error saving expense:", error);
+            alert("שגיאה בתקשורת עם השרת.");
+        }
+
         // ניקוי הטופס והסתרתו
-        expenseForm.reset(); 
+        expenseForm.reset();
         hideContainer.style.display = 'none';
         showButton.style.display = 'block';
         commissionContainer.style.display = 'none';
